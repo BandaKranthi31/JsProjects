@@ -1,0 +1,30 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mid{
+    text-align: center;
+    margin-top: 10rem;
+}
+
+.f-13{
+    font-size: 3rem;
+}
+.flexx{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap:15px;
+    
+}
+
+.btns{
+    height: 3vh;
+    border: 2px solid black;
+    border-radius: 25px;
+    width: 7rem;
+    margin-top: 10px;
+}
+
