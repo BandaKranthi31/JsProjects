@@ -1,0 +1,34 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.mid{
+    text-align: center;
+    font-family: "Smooch Sans";
+    margin-bottom: 3em;
+}
+
+.center{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid rgb(41, 35, 35);
+    padding: 1em 1em;
+    border-radius: 10px;
+    margin: 2rem 2rem ;
+    font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+}
+
+.h3{
+    padding-right: 3em;
+}
+
+.ans{
+   margin-left: auto;
+   margin-right: auto;
+   display: block;
+   padding: 1em 2em;
+   display: none;
+}
