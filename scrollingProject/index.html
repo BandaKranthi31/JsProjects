@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sliding Navbar</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .navbar {
+            position: fixed;
+            top: -60px; /* Start hidden above the page */
+            width: 100%;
+            background-color: #333;
+            color: white;
+            padding: 15px;
+            transition: top 0.3s; /* Smooth transition for the navbar */
+            z-index: 1000;
+        }
+
+        .navbar.fixed {
+            top: 0; /* Stay at the top after scrolling down */
+        }
+
+        .content {
+            height: 2000px; /* Just for scrolling effect */
+            padding-top: 80px; /* Space for navbar */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar" id="navbar">
+        <h1>My Navbar</h1>
+    </div>
+
+    <div class="content">
+        <h2>Scroll down to see the navbar effect!</h2>
+        <p>This is an example of a navbar that slides down and becomes fixed at a certain scroll position.</p>
+    </div>
+
+    <script>
+        window.onload = function() {
+            const navbar = document.getElementById('navbar');
+            let navbarHeight = navbar.getBoundingClientRect().height; // Get height of the navbar
+            const navbarPosition = 100; // Height at which the navbar becomes fixed
+
+            // Set initial navbar position to be hidden above the page
+            navbar.style.top = `-${navbarHeight}px`;
+
+            window.addEventListener('scroll', () => {
+                // Get the current scroll position
+                const scrollPosition = window.scrollY;
+
+                // When scroll position is greater than the navbarPosition, slide down the navbar
+                if (scrollPosition > navbarPosition) {
+                    navbar.style.top = '0px'; // Show navbar at the top
+                    navbar.classList.add('fixed');
+                } else {
+                    navbar.style.top = `-${navbarHeight}px`; // Hide navbar again
+                    navbar.classList.remove('fixed');
+                }
+
+                // Scroll the page to a specific position using window.scrollTo() (optional)
+                // For example, you could reset scroll position after a certain event:
+                // window.scrollTo(0, 0); // Scroll to the top
+            });
+
+            // You can use getFullYear() to get the current year and display it (optional)
+            const currentYear = new Date().getFullYear();
+            console.log(currentYear); // For logging current year
+        };
+    </script>
+
+</body>
+</html>
