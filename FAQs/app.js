@@ -1,12 +1,14 @@
-let button = document.getElementById('toogle');
-let answer = document.getElementById('answer');
+let buttons = document.querySelectorAll('.toggle');
+let answers = document.querySelectorAll('.ans');
 
-button.addEventListener('click',()=>{
-    answer.classList.toggle('show');
+buttons.forEach((button, index) => {
+    button.addEventListener('click', () => {
+        answers[index].classList.toggle('show');
 
-    if(answer.classList.contains('show')){
-        answer.style.display = 'block';
-    } else{
-        answer.style.display = 'none';
-    }
+        if(answers[index].classList.contains('show')){
+            answers[index].style.display = 'block';
+        } else{
+            answers[index].style.display = 'none';
+        }
+    });
 });
