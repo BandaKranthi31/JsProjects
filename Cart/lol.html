@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Store Inventory</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f0f0f0;
+        }
+
+        .inventory-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+        }
+
+        .inventory-table th, .inventory-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .inventory-table th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .controls {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .control-group {
+            background-color: white;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        input[type="text"], input[type="number"] {
+            padding: 8px;
+            margin: 5px;
+            width: 150px;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #feedback {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+        }
+
+        .success {
+            background-color: #dff0d8;
+            color: #3c763d;
+        }
+
+        .error {
+            background-color: #f2dede;
+            color: #a94442;
+        }
+    </style>
+</head>
+<body>
+    <h1>Store Inventory Management</h1>
+    
+    <table class="inventory-table">
+        <thead>
+            <tr>
+                <th>Item</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+        <tbody id="inventory-body">
+        </tbody>
+    </table>
+
+    <div class="controls">
+        <div class="control-group">
+            <h3>Item Operations</h3>
+            <input type="text" id="itemName" placeholder="Item name">
+            <button onclick="handleGetCount()">Check Quantity</button>
+            <button onclick="handleCheckAvailable()">Check Availability</button>
+            <button onclick="handleRemoveItem()">Remove Item</button>
+        </div>
+
+        <div class="control-group">
+            <h3>Quantity Operations</h3>
+            <input type="number" id="quantity" placeholder="Quantity" min="1">
+            <button onclick="handleRestock()">Restock</button>
+            <button onclick="handleBuy()">Buy</button>
+            <button onclick="handleAddItem()">Add New Item</button>
+        </div>
+    </div>
+
+    <div id="feedback"></div>
+
+    <script>
+        class StoreInventory {
+            constructor() {
+                this.items = {
+                    'Rice': 10,
+                    'Milk': 12,
+                    'Milo': 4,
+                    'Bread': 9,
+                    'Yam': 3,
+                    'Sugar': 20,
+                    'Biscuit': 43
+                };
+            }
+
+            getItemCount(itemName) {
+                return this.items[itemName] || 0;
+            }
+
+            isAvailable(itemName) {
+                return this.getItemCount(itemName) > 0;
+            }
+
+            restockItem(itemName, quantity) {
+                if (quantity <= 0) return;
+                this.items[itemName] = (this.items[itemName] || 0) + quantity;
+                this.updateUI();
+            }
+
+            buyItem(itemName, quantity) {
+                if (!this.items[itemName] || this.items[itemName] < quantity) {
+                    return "Not enough stock available.";
+                }
+                this.items[itemName] -= quantity;
+                this.updateUI();
+                return true;
+            }
+
+            removeItem(itemName) {
+                delete this.items[itemName];
+                this.updateUI();
+            }
+
+            addItem(itemName, quantity) {
+                if (this.items[itemName]) {
+                    return "Item already exists.";
+                }
+                this.items[itemName] = quantity;
+                this.updateUI();
+                return true;
+            }
+
+            updateUI() {
+                const tbody = document.getElementById('inventory-body');
+                tbody.innerHTML = Object.entries(this.items)
+                    .map(([item, quantity]) => `
+                        <tr>
+                            <td>${item}</td>
+                            <td>${quantity}</td>
+                        </tr>
+                    `).join('');
+            }
+        }
+
+        const store = new StoreInventory();
+        store.updateUI();
+
+        // UI Handlers
+        function getInputs() {
+            return {
+                itemName: document.getElementById('itemName').value.trim(),
+                quantity: parseInt(document.getElementById('quantity').value) || 0
+            };
+        }
+
+        function showFeedback(message, isError = false) {
+            const feedback = document.getElementById('feedback');
+            feedback.className = isError ? 'error' : 'success';
+            feedback.textContent = message;
+            setTimeout(() => feedback.textContent = '', 3000);
+        }
+
+        function handleGetCount() {
+            const { itemName } = getInputs();
+            const count = store.getItemCount(itemName);
+            showFeedback(`${itemName} quantity: ${count}`);
+        }
+
+        function handleCheckAvailable() {
+            const { itemName } = getInputs();
+            const available = store.isAvailable(itemName);
+            showFeedback(`${itemName} is ${available ? 'available' : 'out of stock'}`);
+        }
+
+        function handleRestock() {
+            const { itemName, quantity } = getInputs();
+            if (!itemName || quantity <= 0) {
+                showFeedback('Invalid input', true);
+                return;
+            }
+            store.restockItem(itemName, quantity);
+            showFeedback(`Restocked ${quantity} ${itemName}`);
+        }
+
+        function handleBuy() {
+            const { itemName, quantity } = getInputs();
+            const result = store.buyItem(itemName, quantity);
+            if (result === true) {
+                showFeedback(`Purchased ${quantity} ${itemName}`);
+            } else {
+                showFeedback(result, true);
+            }
+        }
+
+        function handleRemoveItem() {
+            const { itemName } = getInputs();
+            if (!itemName) {
+                showFeedback('Please enter an item name', true);
+                return;
+            }
+            store.removeItem(itemName);
+            showFeedback(`Removed ${itemName}`);
+        }
+
+        function handleAddItem() {
+            const { itemName, quantity } = getInputs();
+            if (!itemName || quantity <= 0) {
+                showFeedback('Invalid input', true);
+                return;
+            }
+            const result = store.addItem(itemName, quantity);
+            if (result === true) {
+                showFeedback(`Added new item: ${itemName}`);
+            } else {
+                showFeedback(result, true);
+            }
+        }
+    </script>
+</body>
+</html>
