@@ -3,3 +3,16 @@
     padding: 0;
     box-sizing: border-box;
 }
+
+.mid{
+    text-align: center;
+}
+
+button{
+    height: 3rem;
+    width: 5rem;
+    border-radius: 25px;
+    border: 2px solid bisque;
+    color: azure;
+    background-color: rgb(125, 102, 102);
+}

@@ -28,6 +28,120 @@ class storeItems{
         this.updateChanges();
     }
 
+    buyItem(item,quantity){
+        if(!this.items[item] || this.items[item] < quantity){
+            return "No STOCK";
+        }
+        this.items[item] -= quantity;
+        this.updateChanges();
+        return true;
+    }
+
+    removeItem(item){
+        delete this.items[item];
+        this.updateChanges();
+    }
+
+    addItem(item, quantity){
+        if(this.items[item]){
+            return 'Item already exists';
+        }
+        this.items[item] = quantity;
+        this.updateChanges();
+        return true;
+    }
+
+    updateChanges() {
+        const tbody = document.getElementById('groceries');
+        tbody.innerHTML = Object.entries(this.items)
+            .map(([item, quantity]) => `
+                <tr>
+                    <td>${item}</td>
+                    <td>${quantity}</td>
+                </tr>
+            `).join('');
+    }
+
+}
+
+const store = new storeItems();
+
+store.updateChanges();
+
+function getInputs(){
+    return{
+        itemName : document.getElementById('itemName').value.trim(),
+        quantity: parseInt(document.getElementById('quantity').value) || 0
+    };
+}
+
+function handleGetCount() {
+    const { itemName } = getInputs();
+    const count = store.getItemCount(itemName);
+    showFeedback(`${itemName} quantity: ${count}`);
+}
+
+function handleCheckAvailable() {
+    const { itemName } = getInputs();
+    const available = store.isAvailable(itemName);
+    showFeedback(`${itemName} is ${available ? 'available' : 'out of stock'}`);
+}
+
+function handleRestock() {
+    const { itemName, quantity } = getInputs();
+    if (!itemName || quantity <= 0) {
+        showFeedback('Invalid input', true);
+        return;
+    }
+    store.restockItem(itemName, quantity);
+    showFeedback(`Restocked ${quantity} ${itemName}`);
+}
+
+function handleBuy() {
+    const { itemName, quantity } = getInputs();
+    const result = store.buyItem(itemName, quantity);
+    if (result === true) {
+        showFeedback(`Purchased ${quantity} ${itemName}`);
+    } else {
+        showFeedback(result, true);
+    }
+}
+
+function handleRemoveItem() {
+    const { itemName } = getInputs();
+    if (!itemName) {
+        showFeedback('Please enter an item name', true);
+        return;
+    }
+    store.removeItem(itemName);
+    showFeedback(`Removed ${itemName}`);
+}
+
+function handleAddItem() {
+    const { itemName, quantity } = getInputs();
+    if (!itemName || quantity <= 0) {
+        showFeedback('Invalid input', true);
+        return;
+    }
+    const result = store.addItem(itemName, quantity);
+    if (result === true) {
+        showFeedback(`Added new item: ${itemName}`);
+    } else {
+        showFeedback(result, true);
+    }
+
+}
+
+
+function showFeedback(message, isError = false) {
+    const feedbackDiv = document.getElementById('feedback');
+    feedbackDiv.innerHTML = message;
+    feedbackDiv.style.color = isError ? 'red' : 'green';
+}
+
+
+
+
 
     
 
@@ -91,7 +205,7 @@ class storeItems{
 // - The UI design doesn't need to be professional—focus on functionality and simplicity.
 
 // ------
-}
+
 
 
 
