@@ -84,7 +84,7 @@ function handleGetCount() {
 function handleCheckAvailable() {
     const { itemName } = getInputs();
     const available = store.isAvailable(itemName);
-    showFeedback(`${itemName} is ${available ? 'available' : 'out of stock'}`);
+    showFeedback(`${itemName} is ${available ? 'available' : 'Not there'}`);
 }
 
 function handleRestock() {
