@@ -13,8 +13,8 @@ let decrementbtn = document.querySelector(".decrement");
 //forPractice of Collections
 for(let i =0;i<incrementbtn.length;i++){
     incrementbtn[i].addEventListener("click",()=>{
-        number++;
-        num.textContent = number+1;
+        number = number+1;
+        num.textContent = number;
     })
 }
 
@@ -24,7 +24,7 @@ resetbtn.addEventListener("click",()=>{
 })
 
 decrementbtn.addEventListener("click",()=>{
-    number--;
+    number = number -1;
     num.textContent = number;
 })
 
